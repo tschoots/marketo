@@ -48,7 +48,7 @@ type Marketo struct {
 	ClientId        string
 	ClientSecret    string
 	client          *http.Client
-	log             *log.Logger
+	Log             *log.Logger
 }
 
 func (m *Marketo) getToken() (*Token, bool, error) {
