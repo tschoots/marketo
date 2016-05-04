@@ -81,13 +81,13 @@ func (m *Marketo) getToken() (*Token, bool, error) {
 	}
 
 	if err := json.Unmarshal([]byte(buf.String()), &token); err != nil {
-		m.log.Printf("ERROR unmashalling %s\n%s\n", buf.String(), err)
+		m.Log.Printf("ERROR unmashalling %s\n%s\n", buf.String(), err)
 		return nil, false, err
 	}
 	
 	
 	t1 := time.Now()
-	m.log.Printf("getToken time duration : %v\n", t1.Sub(t0))
+	m.Log.Printf("getToken time duration : %v\n", t1.Sub(t0))
 
 	return &token, true, nil
 }
@@ -96,18 +96,18 @@ func (m *Marketo) UpdateReportUrl(email string, reportUrl string, scanNumber int
 	t0 := time.Now()
 	token, ok, err := m.getToken()
 	if !ok {
-		m.log.Printf("ERROR getting token %s\n", err)
+		m.Log.Printf("ERROR getting token %s\n", err)
 		return false, err
 	}
 	
 	url := fmt.Sprintf("%s/rest/v1/leads.json?access_token=%s", m.MarketoInstance, token.Access_token)
-	m.log.Printf("url : \n%s\n\n", url)
+	m.Log.Printf("url : \n%s\n\n", url)
 
 	jsonStr := []byte(fmt.Sprintf("{\"input\":[{\"email\":\"%s\",\"sCReportURL%d\":\"%s\"}],\"action\":\"createOrUpdate\"}", email,scanNumber, reportUrl))
-	m.log.Printf("jsonString :\n%s\n\n", jsonStr)
+	m.Log.Printf("jsonString :\n%s\n\n", jsonStr)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		m.log.Printf("ERROR creating request : \n%s\n", err)
+		m.Log.Printf("ERROR creating request : \n%s\n", err)
 		return false, err
 	}
 	req.Header.Set("Content-type", "application/json")
@@ -115,7 +115,7 @@ func (m *Marketo) UpdateReportUrl(email string, reportUrl string, scanNumber int
 
 	resp, err := m.client.Do(req)
 	if err != nil {
-		m.log.Printf("ERROR doing post on marketo in UpdateReportUrl : \n%s\n", err)
+		m.Log.Printf("ERROR doing post on marketo in UpdateReportUrl : \n%s\n", err)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -123,14 +123,14 @@ func (m *Marketo) UpdateReportUrl(email string, reportUrl string, scanNumber int
 	
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		m.log.Printf("ERROR in UpdateReportUrl in readall : \n%s\n", err)
+		m.Log.Printf("ERROR in UpdateReportUrl in readall : \n%s\n", err)
 		return false, nil
 	}
 
 	fmt.Printf("body : \n%s\n", string(body))
 	
 	t1 := time.Now()
-	m.log.Printf("UpdateReportURL time duration : %v\n", t1.Sub(t0))
+	m.Log.Printf("UpdateReportURL time duration : %v\n", t1.Sub(t0))
 
 	return true, nil
 }
@@ -160,7 +160,7 @@ func (m *Marketo) getMarketoLead(email string) (lead *Lead, err error) {
 	
 	token, ok, err := m.getToken()
 	if !ok {
-		m.log.Printf("ERROR getting token %s\n", err)
+		m.Log.Printf("ERROR getting token %s\n", err)
 		return nil , err
 	}
 
@@ -168,43 +168,43 @@ func (m *Marketo) getMarketoLead(email string) (lead *Lead, err error) {
 	
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		m.log.Printf("ERROR creating request in getMarketoId : \n%s\n", err)
+		m.Log.Printf("ERROR creating request in getMarketoId : \n%s\n", err)
 		return nil, err
 	}
 	req.Header.Set("accept", "text/json")
 
 	resp, err := m.client.Do(req)
 	if err != nil {
-		m.log.Printf("ERROR doing post on marketo in getMarketoId : \n%s\n", err)
+		m.Log.Printf("ERROR doing post on marketo in getMarketoId : \n%s\n", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	
 	if _, err := buf.ReadFrom(resp.Body); err != nil {
-		m.log.Printf("ERROR reading response: \n%s\n", err)
+		m.Log.Printf("ERROR reading response: \n%s\n", err)
 		return nil,  err
 	}
 	
 	if err := json.Unmarshal([]byte(buf.String()), &response); err != nil {
-		m.log.Printf("ERROR unmarshalling %s\n%s\n%s\n", buf.String(), err)
+		m.Log.Printf("ERROR unmarshalling %s\n%s\n%s\n", buf.String(), err)
 		return nil,  err
 	}
 	
 	if !response.Success {
-		m.log.Printf("ERROR %s\n", buf.String())
+		m.Log.Printf("ERROR %s\n", buf.String())
 		return nil , errors.New(buf.String())
 	}
 	
 	
 	// check if there are results
 	if len(response.Result) != 1 {
-		m.log.Printf("ERROR zero or several leads found for %s\n%s\n", email, buf.String())
+		m.Log.Printf("ERROR zero or several leads found for %s\n%s\n", email, buf.String())
 		return nil, errors.New(buf.String())
 	}	
 
 	t1 := time.Now()
-	m.log.Printf("getMarketoLead time duration : %v\n", t1.Sub(t0))
+	m.Log.Printf("getMarketoLead time duration : %v\n", t1.Sub(t0))
 	
 
 	return response.Result[0], nil
