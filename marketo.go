@@ -33,6 +33,16 @@ type Lead struct {
 	Email                string `json:"email"`
 	SecurityCheckerKey   string `json:"securityCheckerKey"`
 	SCReportURL          string `json:"sCReportURL"`
+	SCReportURL1          string `json:"sCReportURL1"`
+	SCReportURL2          string `json:"sCReportURL2"`
+	SCReportURL3          string `json:"sCReportURL3"`
+	SCReportURL4          string `json:"sCReportURL4"`
+	SCReportURL5          string `json:"sCReportURL5"`
+	SCReportURL6          string `json:"sCReportURL6"`
+	SCReportURL7          string `json:"sCReportURL7"`
+	SCReportURL8          string `json:"sCReportURL8"`
+	SCReportURL9          string `json:"sCReportURL9"`
+	SCReportURL10          string `json:"sCReportURL10"`
 	
 }
 
