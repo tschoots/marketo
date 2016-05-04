@@ -135,8 +135,8 @@ func (m *Marketo) UpdateReportUrl(email string, reportUrl string, scanNumber int
 	return true, nil
 }
 
-func (m *Marketo) isSecurityCheckerKeyValid(email string, securityCheckerKey string) (bool, error) {
-	lead, err := m.getMarketoLead(email)
+func (m *Marketo) IsSecurityCheckerKeyValid(email string, securityCheckerKey string) (bool, error) {
+	lead, err := m.GetMarketoLead(email)
 	if err != nil {
 		return false, err
 	}
@@ -149,7 +149,7 @@ func (m *Marketo) isSecurityCheckerKeyValid(email string, securityCheckerKey str
 	
 }
 
-func (m *Marketo) getMarketoLead(email string) (lead *Lead, err error) {
+func (m *Marketo) GetMarketoLead(email string) (lead *Lead, err error) {
 	t0 := time.Now()
 
 	filterType := "email"
