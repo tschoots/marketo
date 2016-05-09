@@ -74,7 +74,7 @@ func (m *Marketo) getToken() (*Token, bool, error) {
 
 	resp, err := m.client.Get(request_url)
 	if err != nil {
-		log.Printf("ERROR getting token \n%s\n", err)
+		m.Log.Printf("ERROR getting token \n%s\n", err)
 		return nil, false, err
 	}
 	defer resp.Body.Close()
@@ -86,7 +86,7 @@ func (m *Marketo) getToken() (*Token, bool, error) {
 	}
 
 	if _, err := buf.ReadFrom(resp.Body); err != nil {
-		fmt.Printf("ERROR reading response: \n%s\n", err)
+		m.Log.Printf("ERROR reading response: \n%s\n", err)
 		return nil, false, err
 	}
 
