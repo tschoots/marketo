@@ -209,7 +209,7 @@ func (m *Marketo) GetMarketoLead(email string) (lead *Lead, err error) {
 	
 	// check if there are results
 	if len(response.Result) != 1 {
-		m.Log.Printf("ERROR zero or several leads found for %s\n%s\n", email, buf.String())
+		m.Log.Printf("ERROR %d leads found for %s\n%s\n", len(response.Result), email, buf.String())
 		return nil, errors.New(buf.String())
 	}	
 
